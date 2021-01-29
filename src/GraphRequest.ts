@@ -376,6 +376,15 @@ export class GraphRequest {
 				middlewareControl,
 			});
 			rawResponse = context.response;
+			if (this.config.debugLogging) {
+				// https://docs.microsoft.com/en-us/graph/best-practices-concept
+				// without the headers object being returned to the consumer, 
+				// we need a way of obtaining these response headers the MSFT requires for stack overflow support
+				console.log("request-id", rawResponse.headers.get("request-id")); // tslint:disable-line: no-console
+				console.log("client-request-id", rawResponse.headers.get("client-request-id")); // tslint:disable-line: no-console
+				console.log("x-ms-ags-diagnostic", rawResponse.headers.get("x-ms-ags-diagnostic")); // tslint:disable-line: no-console
+				console.log("date", rawResponse.headers.get("date")); // tslint:disable-line: no-console
+			}
 			const response: any = await GraphResponseHandler.getResponse(rawResponse, this._responseType, callback);
 			return response;
 		} catch (error) {
